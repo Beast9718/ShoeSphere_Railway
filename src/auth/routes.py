@@ -29,7 +29,7 @@ role_checker=Depends(RoleChecker(["admin","user"]))
         status_code=status.HTTP_201_CREATED
         
         )
-async def create_user_Account(user_data:UserCreateModel,bg_tasks:BackgroundTasks,session:AsyncSession=Depends(get_session)):
+async def create_user_Account(user_data:UserCreateModel,session:AsyncSession=Depends(get_session)):
     email=user_data.email
 
     user_exists=await user_service.user_exists(email,session)
@@ -129,7 +129,7 @@ async def revoke_token(token_details:dict=Depends(AccessTokenBearer())):
     )
 
 @auth_router.post('/send_mail')
-async def send_mail(emails:EmailModel,bg_tasks:BackgroundTasks):
+async def send_mail(emails:EmailModel):
     emails=emails.addresses
     subject="Welcome to our app"
     html="<h1>Welcome to the app</h1>"
@@ -173,7 +173,7 @@ async def verify_user_account(token:str,session:AsyncSession=Depends(get_session
     
 
 @auth_router.post("/password-reset-request")
-async def password_reset_request(email_data:PasswordResetRequestModel,bg_tasks:BackgroundTasks):
+async def password_reset_request(email_data:PasswordResetRequestModel):
     email=email_data.email
 
     token=create_url_safe_token({"email":email})
@@ -187,7 +187,7 @@ async def password_reset_request(email_data:PasswordResetRequestModel,bg_tasks:B
     subject="Reset your Password"
     # message=create_message(recipients=recipients,subject=subject,body=html_message)
     # bg_tasks.add_task(mail.send_message,message)
-    send_email_tasks.delay(recipients,subject,html_message)
+    send_email_tasks.delay(recipients,subject,html)
     # bg_tasks.add_task(send_email,recipients,subject,html)
     # send_email(recipients,subject,html)
     return JSONResponse(
