@@ -2,3 +2,4 @@ fastapi-env/
 .hypothesis/
 .vscode/
 .env
+__pycache__/
