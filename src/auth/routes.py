@@ -1,4 +1,5 @@
-from fastapi import APIRouter,Depends,status,BackgroundTasks
+from fastapi import APIRouter,Depends,status
+# from fastapi import BackgroundTasks
 from .schemas import UserCreateModel,UserModel,UserLoginModel,UserShoesModel,EmailModel,PasswordResetConfirmModel,PasswordResetRequestModel
 from .service import UserService
 from src.db.main import get_session 
@@ -10,9 +11,9 @@ from fastapi.responses import JSONResponse
 from .dependencies import RefreshTokenBearer,AccessTokenBearer,get_current_user,RoleChecker
 from src.db.redis import add_jti_to_blocklist
 # from src.mail import mail,create_message
-from src.mail import send_email
+# from src.mail import send_email
 from src.config import Config
-# from src.celery_tasks import send_email
+from src.celery_tasks import send_email_tasks
 
 
 auth_router=APIRouter()
@@ -48,8 +49,8 @@ async def create_user_Account(user_data:UserCreateModel,bg_tasks:BackgroundTasks
     subject="verify your email"
     # message=create_message(recipients=[email],subject=subject,body=html)
     # bg_tasks.add_task(mail.send_message,message)
-    # send_email.delay([email],subject,html)
-    bg_tasks.add_task(send_email,[email],subject,html)
+    send_email_tasks.delay([email],subject,html)
+    # bg_tasks.add_task(send_email,[email],subject,html)
     # send_email([email],subject,html)
     return{
         "message":"Account create! Check mail to verify account",
@@ -134,8 +135,8 @@ async def send_mail(emails:EmailModel,bg_tasks:BackgroundTasks):
     html="<h1>Welcome to the app</h1>"
     # message=create_message(recipients=emails,subject=subject,body=html)
     # bg_tasks.add_task(mail.send_message,message)
-    # send_email.delay(emails,subject,html)
-    bg_tasks.add_task(send_email,emails,subject,html)
+    send_email_tasks.delay(emails,subject,html)
+    # bg_tasks.add_task(send_email,emails,subject,html)
     # send_email(emails,subject,html)
     return{"message":"Email sent successfully"}
 
@@ -186,8 +187,8 @@ async def password_reset_request(email_data:PasswordResetRequestModel,bg_tasks:B
     subject="Reset your Password"
     # message=create_message(recipients=recipients,subject=subject,body=html_message)
     # bg_tasks.add_task(mail.send_message,message)
-    # send_email.delay(recipients,subject,html_message)
-    bg_tasks.add_task(send_email,recipients,subject,html)
+    send_email_tasks.delay(recipients,subject,html_message)
+    # bg_tasks.add_task(send_email,recipients,subject,html)
     # send_email(recipients,subject,html)
     return JSONResponse(
         content={
