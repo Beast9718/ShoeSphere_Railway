@@ -6,7 +6,10 @@ from sqlalchemy.orm import sessionmaker
 async_engine=create_async_engine(
     url=Config.DATABASE_URL,
     echo=True,
-    pool_pre_ping=True
+    pool_pre_ping=True,
+    pool_size=5,
+    max_overflow=10,
+    pool_recycle=1800
     
 )
 
