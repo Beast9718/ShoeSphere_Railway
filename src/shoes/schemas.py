@@ -29,6 +29,7 @@ class shoe_update_model(BaseModel):
         company: Optional[str]
         category: Optional[str]
         price: Optional[float]
+        image_url: Optional[List[str]] = None
         published_at: Optional[date]
         stock: Optional[int]
         
@@ -39,6 +40,7 @@ class shoe_create_model(BaseModel):
         company: str
         category: str
         price: float
+        image_url: Optional[List[str]] = None
         published_at: date
         stock: int
         
