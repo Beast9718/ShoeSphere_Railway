@@ -13,6 +13,7 @@ class Shoe(BaseModel):
         company: str
         category: str
         price: float
+        image_url: Optional[List[str]] = None
         published_at: date
         stock: int
         created_at:datetime

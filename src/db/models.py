@@ -1,4 +1,4 @@
-from sqlmodel import SQLModel,Field,Column,Relationship
+from sqlmodel import SQLModel,Field,Column,Relationship,JSON
 import sqlalchemy.dialects.postgresql as pg
 import uuid
 from datetime import datetime,date
@@ -55,6 +55,7 @@ class Shoe(SQLModel,table=True):
         company: str
         category: str
         price: float
+        image_url: Optional[List[str]] = Field(default=None, sa_column=Column(JSON))
         published_at: date
         stock: int
         user_uid:Optional[uuid.UUID]=Field(default=None,foreign_key="user.uid")
