@@ -94,7 +94,9 @@ async def login_user(login_data:UserLoginModel,session:AsyncSession=Depends(get_
                     "refresh_token":refresh_token,
                     "user":{
                         "email":user.email,
-                        "uid":str(user.uid)
+                        "uid":str(user.uid),
+                        'is_verified':bool(user.is_verified),
+
                     }
                 }
             )
