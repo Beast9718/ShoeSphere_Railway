@@ -71,7 +71,9 @@ async def login_user(login_data:UserLoginModel,session:AsyncSession=Depends(get_
                 user_data={
                     'email':user.email,
                     'user_uid':str(user.uid),
-                    'role':user.role
+                    'role':user.role,
+                    'is_verified':bool(user.is_verified),
+                    
                 },
                 
             )
